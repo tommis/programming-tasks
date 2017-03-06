@@ -24,7 +24,7 @@ namespace bank_objects
             opBank.Accounts.ForEach(delegate (Account a) {
                 Transaction trans = new Transaction(a.AccountNumber, opBank._accounts[Utils._r.Next(opBank._accounts.Count)].AccountNumber, Utils._r.Next(5, 250), "euro");
 
-                a._transactions.Add(trans);
+                opBank.AddTransaction(a.AccountNumber, trans);
             });
 
            Console.WriteLine(opBank.GetTransActionsFor(opBank.Accounts[0].AccountNumber).Count());

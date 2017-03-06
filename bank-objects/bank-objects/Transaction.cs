@@ -13,14 +13,16 @@ namespace bank_objects
         private decimal _amount;
         private string _currency;
         private DateTime _dateTime;
+        private string _operation;
+        
 
-
-        public Transaction(string accountNumberFrom, string accountNumberTo, decimal amount, string currency, DateTime? date = null)
+        public Transaction(string accountNumberFrom, string accountNumberTo, decimal amount, string currency, string operation = "minus", DateTime? date = null)
         {
             this._accountNumberFrom = accountNumberFrom;
             this._accountNumberTo = accountNumberTo;
             this._amount = amount;
             this._currency = currency;
+            this._operation = operation;
             this._dateTime = date ?? DateTime.UtcNow;
         }
 
@@ -39,6 +41,11 @@ namespace bank_objects
         public string Currency
         {
             get { return _currency; }
+        }
+        public string Operation
+        {
+            get { return _operation; }
+            set { _operation = value; }
         }
         public DateTime Date
         {

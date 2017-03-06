@@ -24,8 +24,7 @@ namespace bank_objects
 
             this._transactions = new List<Transaction>();
         }
-
-
+       
         public string AccountNumber
         {
             get { return _accountNumber; }
@@ -51,14 +50,7 @@ namespace bank_objects
             get { return _transactions; }
             private set { _transactions = value; }
         }
-        public int AddTransaction(Transaction trans)
-        {
-            _transactions.Add(trans);
 
-            _balance = _balance - trans.Amount;
-
-            return 1;
-        }
 
         /// <summary>
         /// Get all transacstions between dates from and to.
@@ -82,27 +74,7 @@ namespace bank_objects
 
         public decimal GetAccountBalance(string accountNumber)
         {
-            try
-            {
-                decimal balance = _balance;
-                foreach (Transaction t in _transactions)
-                {
-                    balance = balance - t.Amount;
-                }
-
-                // get all received money
-                foreach (Account a in _accounts)
-                {
-                    decimal amount = a.Transactions.Where(z => z.AccountNumberTo == accountNumber).Sum(s => s.Amount);
-                    balance = balance + amount;
-                }
-
-                return balance;
-            }
-            catch (System.ArgumentOutOfRangeException)
-            {
-                return 0.00M;
-            }
+            return _balance;
         }
     }
 }

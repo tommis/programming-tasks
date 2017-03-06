@@ -27,6 +27,20 @@ namespace bank_objects
             get { return _accounts; }
         }
 
+        public int AddTransaction(string accountNumber, Transaction trans)
+        {
+            Account fromAccount = _accounts.Single(x => x.AccountNumber == accountNumber);
+            fromAccount.Transactions.Add(trans);
+            fromAccount.Balance = fromAccount.Balance - trans.Amount;
+
+            Account toAccount = _accounts.Single(x => x.AccountNumber == trans.AccountNumberTo);
+            trans.Operation = "plus";
+            fromAccount.Transactions.Add(trans);
+            toAccount.Balance = toAccount.Balance - trans.Amount;
+
+            return 1;
+        }
+
         public List<Transaction> GetTransActionsFor(string accountNumber)
         {
             try
@@ -67,29 +81,7 @@ namespace bank_objects
 
         public decimal GetAccountBalance(string accountNumber)
         {
-            try
-            {
-                Account account = _accounts.Single(x => x.AccountNumber == accountNumber);
-
-                decimal balance = account.Balance;
-                foreach (Transaction t in account.Transactions)
-                {
-                    balance = balance - t.Amount;
-                }
-
-                // get all received money
-                foreach (Account a in _accounts)
-                {
-                    decimal amount = a.Transactions.Where(z => z.AccountNumberTo == accountNumber).Sum(s => s.Amount);
-                    balance = balance + amount;
-                }
-
-                return balance;
-            }
-            catch(System.ArgumentOutOfRangeException)
-            {
-                return 0.00M;
-            }
+            return _accounts.Single(x => x.AccountNumber == accountNumber).Balance;
         }
 
         public void CreateAccount(string name, string owner)
