@@ -11,18 +11,18 @@ namespace bank_objects
         private string _accountNumber;
         private string _accountName;
         private string _owner;
-        private int _balance;
+        private decimal _balance;
 
-        public List<Transaction> Transactions;
+        public List<Transaction> _transactions;
 
-        public Account(string accountNumber, string name, string owner, int startingMoney = 0)
+        public Account(string accountNumber, string name, string owner, int startingMoney = 1000)
         {
             this._accountNumber = accountNumber;
             this._accountName = name;
             this._owner = owner;
             this._balance = startingMoney;
 
-            this.Transactions = new List<Transaction>();
+            this._transactions = new List<Transaction>();
         }
 
 
@@ -40,6 +40,69 @@ namespace bank_objects
         public string Owner {
             get { return _owner; }
             set { _owner = value;  }
+        }
+
+        public decimal Balance {
+            get { return _balance; }
+            set { _balance = value;  }
+        }
+
+        public List<Transaction> Transactions {
+            get { return _transactions; }
+            private set { _transactions = value; }
+        }
+        public int AddTransaction(Transaction trans)
+        {
+            _transactions.Add(trans);
+
+            _balance = _balance - trans.Amount;
+
+            return 1;
+        }
+
+        /// <summary>
+        /// Get all transacstions between dates from and to.
+        /// </summary>
+        public List<Transaction> GetTransActionsForInRange(string accountNumber, DateTime from, DateTime to)
+        {
+            try
+            {
+                List<Transaction> trans = new List<Transaction>(
+                    _transactions.FindAll(t => DateTime.Compare(t.Date, from) >= 0 && DateTime.Compare(t.Date, to) < 0).ToList());
+
+                return trans;
+            }
+            catch (System.InvalidOperationException)
+            {
+                Console.WriteLine("Didn't find anything");
+
+                return new List<Transaction>();
+            }
+        }
+
+        public decimal GetAccountBalance(string accountNumber)
+        {
+            try
+            {
+                decimal balance = _balance;
+                foreach (Transaction t in _transactions)
+                {
+                    balance = balance - t.Amount;
+                }
+
+                // get all received money
+                foreach (Account a in _accounts)
+                {
+                    decimal amount = a.Transactions.Where(z => z.AccountNumberTo == accountNumber).Sum(s => s.Amount);
+                    balance = balance + amount;
+                }
+
+                return balance;
+            }
+            catch (System.ArgumentOutOfRangeException)
+            {
+                return 0.00M;
+            }
         }
     }
 }

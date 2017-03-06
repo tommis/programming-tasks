@@ -7,6 +7,7 @@ namespace bank_objects
 {
     public class Transaction
     {
+        private string _transactionId;
         private string _accountNumberFrom;
         private string _accountNumberTo;
         private decimal _amount;
@@ -23,6 +24,22 @@ namespace bank_objects
             this._dateTime = date ?? DateTime.UtcNow;
         }
 
+        public string AccountNumberFrom
+        {
+            get { return _accountNumberFrom; }
+        }
+        public string AccountNumberTo
+        {
+            get { return _accountNumberTo; }
+        }
+        public decimal Amount
+        {
+            get { return _amount; }
+        }
+        public string Currency
+        {
+            get { return _currency; }
+        }
         public DateTime Date
         {
             get { return _dateTime; }

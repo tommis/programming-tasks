@@ -21,14 +21,18 @@ namespace bank_objects
             opBank.CreateAccount("Säästö Tili", "199S");
             opBank.CreateAccount("Investments", "245M");
 
-            Random r = new Random();
             opBank.Accounts.ForEach(delegate (Account a) {
-                Transaction trans = new Transaction(a.AccountNumber, opBank.Accounts[r.Next(opBank.Accounts.Count)].AccountNumber, r.Next(5, 250), "euro");
-                a.Transactions.Add(trans);
-            });
-            Console.WriteLine(asiakas.ToString());
+                Transaction trans = new Transaction(a.AccountNumber, opBank._accounts[Utils._r.Next(opBank._accounts.Count)].AccountNumber, Utils._r.Next(5, 250), "euro");
 
-            Console.ReadLine();
+                a._transactions.Add(trans);
+            });
+
+           Console.WriteLine(opBank.GetTransActionsFor(opBank.Accounts[0].AccountNumber).Count());
+           Console.WriteLine(opBank.GetAccountBalance(opBank.Accounts[0].AccountNumber));
+
+           Console.WriteLine(asiakas.ToString());
+
+           Console.ReadLine();
         }
     }
 }
