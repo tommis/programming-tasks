@@ -22,8 +22,8 @@ namespace referencenumber_fi
             string basePart = refNumber.Substring(0, refNumber.Length - 1);
             string checkSum = refNumber.Substring(refNumber.Length - 1, 1);
 
-            if (GenChecksum(basePart) == Convert.ToInt16(checkSum) && _RrefNumber.IsMatch(refNumber) && includesChecksum || 
-                (_RrefNumber.IsMatch(refNumber) && !includesChecksum))
+            if ((_RrefNumber.IsMatch(refNumber) && !includesChecksum) ||
+                GenChecksum(basePart) == Convert.ToInt16(checkSum) && _RrefNumber.IsMatch(refNumber) && includesChecksum)
                 return true;
             return false;
         }
@@ -31,7 +31,12 @@ namespace referencenumber_fi
         {
             if (!Validate(basePart, false))
                 throw new ArgumentException();
-            return basePart + GenChecksum(basePart);
+            string refNum = basePart + GenChecksum(basePart);
+            var refNumFinal = Enumerable
+                   .Range(0, refNum.Length / 5)
+                   .Select(i => refNum.Substring(i * 5, 5))
+                   .ToList();
+            return refNum;
             
         }
         public static int GenChecksum(string input) {
@@ -63,12 +68,11 @@ namespace referencenumber_fi
             for (int i = 0; i < times; i++)
                 lock (_syncLock)
                 {
-                    string refNumber = ConvertToRef(Convert.ToString(Enumerable.Range(0, 10)
-                                           .Select(x => range[_r.Next(0, range.Length)])));
+                    string refNumber = ConvertToRef(String.Join("",
+                        Enumerable.Range(0, 10).Select(x => range[_r.Next(0, range.Length)])));
                     res.Add(refNumber);
                 }     
            
-
             return res;
         }
     }
