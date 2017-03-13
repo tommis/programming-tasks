@@ -22,17 +22,21 @@ namespace bank_objects
             opBank.CreateAccount("Investments", "245M");
 
             opBank.Accounts.ForEach(delegate (Account a) {
-                Transaction trans = new Transaction(a.AccountNumber, opBank._accounts[Utils._r.Next(opBank._accounts.Count)].AccountNumber, Utils._r.Next(5, 250), "euro");
+                for (int i = 0; i < 10; i++) {
+                    Transaction trans = new Transaction(a.AccountNumber, opBank.Accounts[Utils.Rnd.Next(opBank.Accounts.Count)].AccountNumber, Utils.Rnd.Next(5, 250), "euro", "minus", Utils.RandomDay());
 
-                opBank.AddTransaction(a.AccountNumber, trans);
+                    opBank.AddTransaction(a.AccountNumber, trans);
+                }
             });
+            
+            Console.WriteLine(opBank.GetTransActionsFor(opBank.Accounts[0].AccountNumber).Count());
+            Console.WriteLine(opBank.GetAccountBalance(opBank.Accounts[0].AccountNumber));
 
-           Console.WriteLine(opBank.GetTransActionsFor(opBank.Accounts[0].AccountNumber).Count());
-           Console.WriteLine(opBank.GetAccountBalance(opBank.Accounts[0].AccountNumber));
+            Console.WriteLine(asiakas.ToString());
 
-           Console.WriteLine(asiakas.ToString());
+            Console.WriteLine(opBank.GetTransActionsForInRange(opBank.Accounts[1].AccountNumber, new DateTime(2000, 1, 1), new DateTime(2005, 1, 1)).Count());
 
-           Console.ReadLine();
+            Console.ReadLine();
         }
     }
 }

@@ -8,17 +8,17 @@ namespace bank_objects
 {
     public class Utils
     {
-        public static readonly Random _r = new Random();
+        public static readonly Random Rnd = new Random();
         private static readonly object _syncLock = new object();
 
-        public static string RandomString(int size, string range = "0123456789")
+        private static string RandomString(int size, string range = "0123456789")
         {
             string input = range;
 
             lock (_syncLock)
             {
                 var chars = Enumerable.Range(0, size)
-                                       .Select(x => input[_r.Next(0, input.Length)]);
+                                       .Select(x => input[Rnd.Next(0, input.Length)]);
                 return new string(chars.ToArray());
             }
         }
@@ -38,11 +38,20 @@ namespace bank_objects
             return iban;
         }
 
-        public static string GenCheckSum(string input)
+        private static string GenCheckSum(string input)
         {
             decimal sum = (98 - (Convert.ToDecimal(input) % 97));
             return sum < 10 ? "0" + Convert.ToString(sum) : Convert.ToString(sum);
         }
 
+        public static DateTime RandomDay()
+        {
+            DateTime startDate = new DateTime(2000, 1, 1);
+            TimeSpan timeSpan = DateTime.UtcNow - startDate;
+            TimeSpan newSpan = new TimeSpan(0, Rnd.Next(0, (int)timeSpan.TotalMinutes), 0);
+            DateTime newDate = startDate + newSpan;
+
+            return newDate;
+        }
     }
 }

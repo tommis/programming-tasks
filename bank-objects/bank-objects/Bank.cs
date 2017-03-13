@@ -11,7 +11,7 @@ namespace bank_objects
         private string _bic;
         private string _name;
 
-        public List<Account> _accounts;
+        private List<Account> _accounts;
 
 
         public Bank(string bic, string name = "")
@@ -21,13 +21,13 @@ namespace bank_objects
 
             this._accounts = new List<Account>();
         }
-
+        
         
         public List<Account> Accounts {
             get { return _accounts; }
         }
 
-        public int AddTransaction(string accountNumber, Transaction trans)
+        public void AddTransaction(string accountNumber, Transaction trans)
         {
             Account fromAccount = _accounts.Single(x => x.AccountNumber == accountNumber);
             fromAccount.Transactions.Add(trans);
@@ -36,9 +36,7 @@ namespace bank_objects
             Account toAccount = _accounts.Single(x => x.AccountNumber == trans.AccountNumberTo);
             trans.Operation = "plus";
             fromAccount.Transactions.Add(trans);
-            toAccount.Balance = toAccount.Balance - trans.Amount;
-
-            return 1;
+            toAccount.Balance = toAccount.Balance + trans.Amount;
         }
 
         public List<Transaction> GetTransActionsFor(string accountNumber)
@@ -67,7 +65,7 @@ namespace bank_objects
                 Account a = _accounts.Single(x => x.AccountNumber == accountNumber);
 
                 List<Transaction> trans = new List<Transaction>(
-                    a._transactions.FindAll(t => DateTime.Compare(t.Date, from) >= 0 && DateTime.Compare(t.Date, to) < 0).ToList());
+                    a.Transactions.FindAll(t => DateTime.Compare(t.Date, from) >= 0 && DateTime.Compare(t.Date, to) < 0).ToList());
 
                 return trans;
             }

@@ -13,7 +13,7 @@ namespace bank_objects
         private string _owner;
         private decimal _balance;
 
-        public List<Transaction> _transactions;
+        private List<Transaction> _transactions;
 
         public Account(string accountNumber, string name, string owner, int startingMoney = 1000)
         {
